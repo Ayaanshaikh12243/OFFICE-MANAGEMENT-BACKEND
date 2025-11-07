@@ -47,6 +47,7 @@ exports.listEmployees = async (req, res) => {
       departments,
       currentPage: page,
       totalPages,
+      totalEmployees,
       searchQuery,
       departmentFilter,
       jobTitleFilter,
