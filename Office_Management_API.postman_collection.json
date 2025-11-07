@@ -1,0 +1,635 @@
+{
+  "info": {
+    "name": "Office Management System API",
+    "description": "Complete API collection for Office Management System with authentication, departments, and employees endpoints",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "12345678"
+  },
+  "item": [
+    {
+      "name": "Authentication",
+      "item": [
+        {
+          "name": "Register User",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/x-www-form-urlencoded"
+              }
+            ],
+            "body": {
+              "mode": "urlencoded",
+              "urlencoded": [
+                {
+                  "key": "username",
+                  "value": "johndoe",
+                  "type": "text"
+                },
+                {
+                  "key": "email",
+                  "value": "john@example.com",
+                  "type": "text"
+                },
+                {
+                  "key": "password",
+                  "value": "password123",
+                  "type": "text"
+                },
+                {
+                  "key": "password2",
+                  "value": "password123",
+                  "type": "text"
+                },
+                {
+                  "key": "fullName",
+                  "value": "John Doe",
+                  "type": "text"
+                }
+              ]
+            },
+            "url": {
+              "raw": "http://localhost:3000/auth/register",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "3000",
+              "path": ["auth", "register"]
+            },
+            "description": "Register a new user account"
+          }
+        },
+        {
+          "name": "Login",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/x-www-form-urlencoded"
+              }
+            ],
+            "body": {
+              "mode": "urlencoded",
+              "urlencoded": [
+                {
+                  "key": "email",
+                  "value": "admin@office.com",
+                  "type": "text"
+                },
+                {
+                  "key": "password",
+                  "value": "admin123",
+                  "type": "text"
+                }
+              ]
+            },
+            "url": {
+              "raw": "http://localhost:3000/auth/login",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "3000",
+              "path": ["auth", "login"]
+            },
+            "description": "Login with email and password"
+          }
+        },
+        {
+          "name": "Logout",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:3000/auth/logout",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "3000",
+              "path": ["auth", "logout"]
+            },
+            "description": "Logout current user"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Departments",
+      "item": [
+        {
+          "name": "Get All Departments",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:3000/departments",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "3000",
+              "path": ["departments"]
+            },
+            "description": "Get list of all departments with pagination"
+          }
+        },
+        {
+          "name": "Get Departments (Page 2)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:3000/departments?page=2",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "3000",
+              "path": ["departments"],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "2"
+                }
+              ]
+            },
+            "description": "Get departments with pagination (page 2)"
+          }
+        },
+        {
+          "name": "Add Department",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/x-www-form-urlencoded"
+              }
+            ],
+            "body": {
+              "mode": "urlencoded",
+              "urlencoded": [
+                {
+                  "key": "name",
+                  "value": "Information Technology",
+                  "type": "text"
+                },
+                {
+                  "key": "code",
+                  "value": "IT",
+                  "type": "text"
+                },
+                {
+                  "key": "description",
+                  "value": "Handles all technology and software development",
+                  "type": "text"
+                }
+              ]
+            },
+            "url": {
+              "raw": "http://localhost:3000/departments/add",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "3000",
+              "path": ["departments", "add"]
+            },
+            "description": "Add a new department (Admin only)"
+          }
+        },
+        {
+          "name": "Update Department",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/x-www-form-urlencoded"
+              }
+            ],
+            "body": {
+              "mode": "urlencoded",
+              "urlencoded": [
+                {
+                  "key": "name",
+                  "value": "Information Technology",
+                  "type": "text"
+                },
+                {
+                  "key": "code",
+                  "value": "IT",
+                  "type": "text"
+                },
+                {
+                  "key": "description",
+                  "value": "Updated description for IT department",
+                  "type": "text"
+                }
+              ]
+            },
+            "url": {
+              "raw": "http://localhost:3000/departments/edit/:id",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "3000",
+              "path": ["departments", "edit", ":id"],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "department_id_here"
+                }
+              ]
+            },
+            "description": "Update an existing department (Admin only)"
+          }
+        },
+        {
+          "name": "Delete Department",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:3000/departments/delete/:id",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "3000",
+              "path": ["departments", "delete", ":id"],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "department_id_here"
+                }
+              ]
+            },
+            "description": "Delete a department (Admin only, cannot delete if has employees)"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Employees",
+      "item": [
+        {
+          "name": "Get All Employees",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:3000/employees",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "3000",
+              "path": ["employees"]
+            },
+            "description": "Get list of all employees with pagination"
+          }
+        },
+        {
+          "name": "Search Employees",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:3000/employees?search=john&department=&jobTitle=",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "3000",
+              "path": ["employees"],
+              "query": [
+                {
+                  "key": "search",
+                  "value": "john"
+                },
+                {
+                  "key": "department",
+                  "value": ""
+                },
+                {
+                  "key": "jobTitle",
+                  "value": ""
+                }
+              ]
+            },
+            "description": "Search employees by name or email"
+          }
+        },
+        {
+          "name": "Filter Employees by Department",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:3000/employees?search=&department=department_id_here&jobTitle=",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "3000",
+              "path": ["employees"],
+              "query": [
+                {
+                  "key": "search",
+                  "value": ""
+                },
+                {
+                  "key": "department",
+                  "value": "department_id_here"
+                },
+                {
+                  "key": "jobTitle",
+                  "value": ""
+                }
+              ]
+            },
+            "description": "Filter employees by department"
+          }
+        },
+        {
+          "name": "Filter by Job Title",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:3000/employees?search=&department=&jobTitle=manager",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "3000",
+              "path": ["employees"],
+              "query": [
+                {
+                  "key": "search",
+                  "value": ""
+                },
+                {
+                  "key": "department",
+                  "value": ""
+                },
+                {
+                  "key": "jobTitle",
+                  "value": "manager"
+                }
+              ]
+            },
+            "description": "Filter employees by job title"
+          }
+        },
+        {
+          "name": "Get Employee Details",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:3000/employees/details/:id",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "3000",
+              "path": ["employees", "details", ":id"],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "employee_id_here"
+                }
+              ]
+            },
+            "description": "Get detailed information about a specific employee"
+          }
+        },
+        {
+          "name": "Add Employee",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/x-www-form-urlencoded"
+              }
+            ],
+            "body": {
+              "mode": "urlencoded",
+              "urlencoded": [
+                {
+                  "key": "firstName",
+                  "value": "John",
+                  "type": "text"
+                },
+                {
+                  "key": "lastName",
+                  "value": "Smith",
+                  "type": "text"
+                },
+                {
+                  "key": "email",
+                  "value": "john.smith@office.com",
+                  "type": "text"
+                },
+                {
+                  "key": "phone",
+                  "value": "+1-555-1234",
+                  "type": "text"
+                },
+                {
+                  "key": "jobTitle",
+                  "value": "Software Developer",
+                  "type": "text"
+                },
+                {
+                  "key": "department",
+                  "value": "department_id_here",
+                  "type": "text"
+                },
+                {
+                  "key": "salary",
+                  "value": "75000",
+                  "type": "text"
+                },
+                {
+                  "key": "dateOfJoining",
+                  "value": "2024-01-15",
+                  "type": "text"
+                },
+                {
+                  "key": "country",
+                  "value": "United States",
+                  "type": "text"
+                },
+                {
+                  "key": "state",
+                  "value": "California",
+                  "type": "text"
+                },
+                {
+                  "key": "city",
+                  "value": "San Francisco",
+                  "type": "text"
+                },
+                {
+                  "key": "address",
+                  "value": "123 Main Street",
+                  "type": "text"
+                },
+                {
+                  "key": "supervisor",
+                  "value": "",
+                  "type": "text"
+                },
+                {
+                  "key": "status",
+                  "value": "active",
+                  "type": "text"
+                }
+              ]
+            },
+            "url": {
+              "raw": "http://localhost:3000/employees/add",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "3000",
+              "path": ["employees", "add"]
+            },
+            "description": "Add a new employee (Admin only)"
+          }
+        },
+        {
+          "name": "Update Employee",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/x-www-form-urlencoded"
+              }
+            ],
+            "body": {
+              "mode": "urlencoded",
+              "urlencoded": [
+                {
+                  "key": "firstName",
+                  "value": "John",
+                  "type": "text"
+                },
+                {
+                  "key": "lastName",
+                  "value": "Smith",
+                  "type": "text"
+                },
+                {
+                  "key": "email",
+                  "value": "john.smith@office.com",
+                  "type": "text"
+                },
+                {
+                  "key": "phone",
+                  "value": "+1-555-1234",
+                  "type": "text"
+                },
+                {
+                  "key": "jobTitle",
+                  "value": "Senior Software Developer",
+                  "type": "text"
+                },
+                {
+                  "key": "department",
+                  "value": "department_id_here",
+                  "type": "text"
+                },
+                {
+                  "key": "salary",
+                  "value": "85000",
+                  "type": "text"
+                },
+                {
+                  "key": "dateOfJoining",
+                  "value": "2024-01-15",
+                  "type": "text"
+                },
+                {
+                  "key": "country",
+                  "value": "United States",
+                  "type": "text"
+                },
+                {
+                  "key": "state",
+                  "value": "California",
+                  "type": "text"
+                },
+                {
+                  "key": "city",
+                  "value": "San Francisco",
+                  "type": "text"
+                },
+                {
+                  "key": "address",
+                  "value": "123 Main Street, Apt 5",
+                  "type": "text"
+                },
+                {
+                  "key": "supervisor",
+                  "value": "supervisor_id_here",
+                  "type": "text"
+                },
+                {
+                  "key": "status",
+                  "value": "active",
+                  "type": "text"
+                }
+              ]
+            },
+            "url": {
+              "raw": "http://localhost:3000/employees/edit/:id",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "3000",
+              "path": ["employees", "edit", ":id"],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "employee_id_here"
+                }
+              ]
+            },
+            "description": "Update an existing employee (Admin only)"
+          }
+        },
+        {
+          "name": "Delete Employee",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:3000/employees/delete/:id",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "3000",
+              "path": ["employees", "delete", ":id"],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "employee_id_here"
+                }
+              ]
+            },
+            "description": "Delete an employee (Admin only, cannot delete if supervising others)"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Dashboard",
+      "item": [
+        {
+          "name": "Get Dashboard",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:3000/dashboard",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "3000",
+              "path": ["dashboard"]
+            },
+            "description": "Get dashboard with statistics and recent employees"
+          }
+        }
+      ]
+    }
+  ],
+  "variable": [
+    {
+      "key": "base_url",
+      "value": "http://localhost:3000",
+      "type": "string"
+    }
+  ]
+}

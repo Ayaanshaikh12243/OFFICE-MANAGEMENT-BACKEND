@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title><%= title %> - Office Management System</title>
+  
+  <!-- Bootstrap CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  
+  <!-- Bootstrap Icons -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
+  
+  <!-- Custom CSS -->
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+  
+  <%- include('../partials/header') %>
+  <%- include('../partials/messages') %>
+  
+  <div class="container mt-4">
+    <!-- Header -->
+    <div class="row mb-4">
+      <div class="col-md-6">
+        <h2><i class="bi bi-diagram-3"></i> Departments</h2>
+        <p class="text-muted">Manage all departments</p>
+      </div>
+      <div class="col-md-6 text-end">
+        <a href="/departments/add" class="btn btn-primary">
+          <i class="bi bi-plus-circle"></i> Add Department
+        </a>
+      </div>
+    </div>
+    
+    <!-- Departments Table -->
+    <div class="card">
+      <div class="card-body">
+        <% if (departments.length > 0) { %>
+          <div class="table-responsive">
+            <table class="table table-hover">
+              <thead class="table-dark">
+                <tr>
+                  <th>Code</th>
+                  <th>Name</th>
+                  <th>Description</th>
+                  <th>Employees</th>
+                  <th>Created</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                <% departments.forEach(department => { %>
+                  <tr>
+                    <td><span class="badge bg-secondary"><%= department.code %></span></td>
+                    <td><strong><%= department.name %></strong></td>
+                    <td><%= department.description %></td>
+                    <td>
+                      <span class="badge bg-info"><%= department.employeeCount %></span>
+                    </td>
+                    <td><%= new Date(department.createdAt).toLocaleDateString() %></td>
+                    <td>
+                        <a href="/departments/edit/<%= department._id %>" class="btn btn-sm btn-warning">
+                          <i class="bi bi-pencil"></i> Edit
+                        </a>
+                        <button type="button" class="btn btn-sm btn-danger" data-bs-toggle="modal" data-bs-target="#deleteModal<%= department._id %>">
+                          <i class="bi bi-trash"></i> Delete
+                        </button>
+                        
+                        <!-- Delete Modal -->
+                        <div class="modal fade" id="deleteModal<%= department._id %>" tabindex="-1">
+                          <div class="modal-dialog">
+                            <div class="modal-content">
+                              <div class="modal-header">
+                                <h5 class="modal-title">Confirm Delete</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                              </div>
+                              <div class="modal-body">
+                                Are you sure you want to delete the department "<%= department.name %>"?
+                                <% if (department.employeeCount > 0) { %>
+                                  <div class="alert alert-warning mt-2">
+                                    <strong>Warning:</strong> This department has <%= department.employeeCount %> employee(s). You cannot delete it.
+                                  </div>
+                                <% } %>
+                              </div>
+                              <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                                <% if (department.employeeCount === 0) { %>
+                                  <form action="/departments/delete/<%= department._id %>" method="POST" class="d-inline">
+                                    <button type="submit" class="btn btn-danger">Delete</button>
+                                  </form>
+                                <% } %>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </td>
+                  </tr>
+                <% }); %>
+              </tbody>
+            </table>
+          </div>
+          
+          <!-- Pagination -->
+          <% if (totalPages > 1) { %>
+            <nav>
+              <ul class="pagination justify-content-center">
+                <li class="page-item <%= currentPage === 1 ? 'disabled' : '' %>">
+                  <a class="page-link" href="?page=<%= currentPage - 1 %>">Previous</a>
+                </li>
+                
+                <% for (let i = 1; i <= totalPages; i++) { %>
+                  <li class="page-item <%= currentPage === i ? 'active' : '' %>">
+                    <a class="page-link" href="?page=<%= i %>"><%= i %></a>
+                  </li>
+                <% } %>
+                
+                <li class="page-item <%= currentPage === totalPages ? 'disabled' : '' %>">
+                  <a class="page-link" href="?page=<%= currentPage + 1 %>">Next</a>
+                </li>
+              </ul>
+            </nav>
+          <% } %>
+        <% } else { %>
+          <div class="text-center py-5">
+            <i class="bi bi-folder-x text-muted" style="font-size: 4rem;"></i>
+            <p class="text-muted mt-3">No departments found</p>
+            <a href="/departments/add" class="btn btn-primary">Add First Department</a>
+          </div>
+        <% } %>
+      </div>
+    </div>
+  </div>
+  
+  <%- include('../partials/footer') %>
+  
+  <!-- Bootstrap JS -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="/js/main.js"></script>
+</body>
+</html>

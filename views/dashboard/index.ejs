@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title><%= title %> - Office Management System</title>
+  
+  <!-- Bootstrap CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  
+  <!-- Bootstrap Icons -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
+  
+  <!-- Custom CSS -->
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+  
+  <%- include('../partials/header') %>
+  <%- include('../partials/messages') %>
+  
+  <div class="container mt-4">
+    <!-- Welcome Section -->
+    <div class="row mb-4">
+      <div class="col">
+        <h2>Welcome, <%= user.fullName %>!</h2>
+        <p class="text-muted">Here's an overview of your office management system</p>
+      </div>
+    </div>
+    
+    <!-- Statistics Cards -->
+    <div class="row mb-4">
+      <div class="col-md-4 mb-3">
+        <div class="card border-primary">
+          <div class="card-body">
+            <div class="d-flex justify-content-between align-items-center">
+              <div>
+                <h6 class="text-muted mb-2">Total Employees</h6>
+                <h2 class="mb-0"><%= totalEmployees %></h2>
+              </div>
+              <div class="text-primary">
+                <i class="bi bi-people" style="font-size: 3rem;"></i>
+              </div>
+            </div>
+          </div>
+          <div class="card-footer bg-primary text-white">
+            <a href="/employees" class="text-white text-decoration-none">
+              View All <i class="bi bi-arrow-right"></i>
+            </a>
+          </div>
+        </div>
+      </div>
+      
+      <div class="col-md-4 mb-3">
+        <div class="card border-success">
+          <div class="card-body">
+            <div class="d-flex justify-content-between align-items-center">
+              <div>
+                <h6 class="text-muted mb-2">Active Employees</h6>
+                <h2 class="mb-0"><%= activeEmployees %></h2>
+              </div>
+              <div class="text-success">
+                <i class="bi bi-person-check" style="font-size: 3rem;"></i>
+              </div>
+            </div>
+          </div>
+          <div class="card-footer bg-success text-white">
+            <a href="/employees?status=active" class="text-white text-decoration-none">
+              View Active <i class="bi bi-arrow-right"></i>
+            </a>
+          </div>
+        </div>
+      </div>
+      
+      <div class="col-md-4 mb-3">
+        <div class="card border-info">
+          <div class="card-body">
+            <div class="d-flex justify-content-between align-items-center">
+              <div>
+                <h6 class="text-muted mb-2">Total Departments</h6>
+                <h2 class="mb-0"><%= totalDepartments %></h2>
+              </div>
+              <div class="text-info">
+                <i class="bi bi-diagram-3" style="font-size: 3rem;"></i>
+              </div>
+            </div>
+          </div>
+          <div class="card-footer bg-info text-white">
+            <a href="/departments" class="text-white text-decoration-none">
+              View All <i class="bi bi-arrow-right"></i>
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Quick Actions -->
+    <div class="row mb-4">
+      <div class="col">
+        <div class="card">
+          <div class="card-header bg-dark text-white">
+            <h5 class="mb-0"><i class="bi bi-lightning"></i> Quick Actions</h5>
+          </div>
+          <div class="card-body">
+            <div class="row">
+              <div class="col-md-6 mb-2">
+                <a href="/employees/add" class="btn btn-primary w-100">
+                  <i class="bi bi-person-plus"></i> Add New Employee
+                </a>
+              </div>
+              <div class="col-md-6 mb-2">
+                <a href="/departments/add" class="btn btn-info w-100">
+                  <i class="bi bi-plus-circle"></i> Add New Department
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Recent Employees -->
+    <div class="row">
+      <div class="col">
+        <div class="card">
+          <div class="card-header bg-secondary text-white">
+            <h5 class="mb-0"><i class="bi bi-clock-history"></i> Recently Added Employees</h5>
+          </div>
+          <div class="card-body">
+            <% if (recentEmployees.length > 0) { %>
+              <div class="table-responsive">
+                <table class="table table-hover">
+                  <thead>
+                    <tr>
+                      <th>Name</th>
+                      <th>Email</th>
+                      <th>Job Title</th>
+                      <th>Department</th>
+                      <th>Status</th>
+                      <th>Actions</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <% recentEmployees.forEach(employee => { %>
+                      <tr>
+                        <td><%= employee.firstName %> <%= employee.lastName %></td>
+                        <td><%= employee.email %></td>
+                        <td><%= employee.jobTitle %></td>
+                        <td><%= employee.department.name %></td>
+                        <td>
+                          <% if (employee.status === 'active') { %>
+                            <span class="badge bg-success">Active</span>
+                          <% } else if (employee.status === 'inactive') { %>
+                            <span class="badge bg-danger">Inactive</span>
+                          <% } else { %>
+                            <span class="badge bg-warning">On Leave</span>
+                          <% } %>
+                        </td>
+                        <td>
+                          <a href="/employees/details/<%= employee._id %>" class="btn btn-sm btn-info">
+                            <i class="bi bi-eye"></i>
+                          </a>
+                        </td>
+                      </tr>
+                    <% }); %>
+                  </tbody>
+                </table>
+              </div>
+            <% } else { %>
+              <p class="text-muted text-center">No employees found</p>
+            <% } %>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <%- include('../partials/footer') %>
+  
+  <!-- Bootstrap JS -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="/js/main.js"></script>
+</body>
+</html>

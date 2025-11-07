@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title><%= title %> - Office Management System</title>
+  
+  <!-- Bootstrap CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  
+  <!-- Bootstrap Icons -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
+  
+  <!-- Custom CSS -->
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+  
+  <%- include('../partials/header') %>
+  <%- include('../partials/messages') %>
+  
+  <div class="container-fluid mt-4">
+    <!-- Header -->
+    <div class="row mb-4">
+      <div class="col-md-6">
+        <h2><i class="bi bi-people"></i> Employees</h2>
+        <p class="text-muted">Manage all employees</p>
+      </div>
+      <div class="col-md-6 text-end">
+        <a href="/employees/add" class="btn btn-primary">
+          <i class="bi bi-person-plus"></i> Add Employee
+        </a>
+      </div>
+    </div>
+    
+    <!-- Search and Filter -->
+    <div class="card mb-4">
+      <div class="card-body">
+        <form action="/employees" method="GET">
+          <div class="row g-3">
+            <div class="col-md-4">
+              <label for="search" class="form-label">Search by Name/Email</label>
+              <input 
+                type="text" 
+                class="form-control" 
+                id="search" 
+                name="search" 
+                placeholder="Enter name or email"
+                value="<%= searchQuery %>"
+              >
+            </div>
+            
+            <div class="col-md-3">
+              <label for="department" class="form-label">Filter by Department</label>
+              <select class="form-select" id="department" name="department">
+                <option value="">All Departments</option>
+                <% departments.forEach(dept => { %>
+                  <option value="<%= dept._id %>" <%= departmentFilter === dept._id.toString() ? 'selected' : '' %>>
+                    <%= dept.name %>
+                  </option>
+                <% }); %>
+              </select>
+            </div>
+            
+            <div class="col-md-3">
+              <label for="jobTitle" class="form-label">Filter by Job Title</label>
+              <input 
+                type="text" 
+                class="form-control" 
+                id="jobTitle" 
+                name="jobTitle" 
+                placeholder="e.g., Manager"
+                value="<%= jobTitleFilter %>"
+              >
+            </div>
+            
+            <div class="col-md-2 d-flex align-items-end">
+              <button type="submit" class="btn btn-primary w-100">
+                <i class="bi bi-search"></i> Search
+              </button>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+    
+    <!-- Employees Table -->
+    <div class="card">
+      <div class="card-body">
+        <% if (employees.length > 0) { %>
+          <div class="table-responsive">
+            <table class="table table-hover">
+              <thead class="table-dark">
+                <tr>
+                  <th>Name</th>
+                  <th>Email</th>
+                  <th>Job Title</th>
+                  <th>Department</th>
+                  <th>Phone</th>
+                  <th>Status</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                <% employees.forEach(employee => { %>
+                  <tr>
+                    <td><strong><%= employee.firstName %> <%= employee.lastName %></strong></td>
+                    <td><%= employee.email %></td>
+                    <td><%= employee.jobTitle %></td>
+                    <td><span class="badge bg-secondary"><%= employee.department.name %></span></td>
+                    <td><%= employee.phone %></td>
+                    <td>
+                      <% if (employee.status === 'active') { %>
+                        <span class="badge bg-success">Active</span>
+                      <% } else if (employee.status === 'inactive') { %>
+                        <span class="badge bg-danger">Inactive</span>
+                      <% } else { %>
+                        <span class="badge bg-warning">On Leave</span>
+                      <% } %>
+                    </td>
+                    <td>
+                      <a href="/employees/details/<%= employee._id %>" class="btn btn-sm btn-info" title="View Details">
+                        <i class="bi bi-eye"></i>
+                      </a>
+                      <a href="/employees/edit/<%= employee._id %>" class="btn btn-sm btn-warning" title="Edit">
+                        <i class="bi bi-pencil"></i>
+                      </a>
+                      <button type="button" class="btn btn-sm btn-danger" data-bs-toggle="modal" data-bs-target="#deleteModal<%= employee._id %>" title="Delete">
+                        <i class="bi bi-trash"></i>
+                      </button>
+                      
+                      <!-- Delete Modal -->
+                      <div class="modal fade" id="deleteModal<%= employee._id %>" tabindex="-1">
+                        <div class="modal-dialog">
+                          <div class="modal-content">
+                            <div class="modal-header">
+                              <h5 class="modal-title">Confirm Delete</h5>
+                              <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                            </div>
+                            <div class="modal-body">
+                              Are you sure you want to delete employee "<%= employee.firstName %> <%= employee.lastName %>"?
+                            </div>
+                            <div class="modal-footer">
+                              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                              <form action="/employees/delete/<%= employee._id %>" method="POST" class="d-inline">
+                                <button type="submit" class="btn btn-danger">Delete</button>
+                              </form>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </td>
+                  </tr>
+                <% }); %>
+              </tbody>
+            </table>
+          </div>
+          
+          <!-- Pagination -->
+          <% if (totalPages > 1) { %>
+            <nav>
+              <ul class="pagination justify-content-center">
+                <li class="page-item <%= currentPage === 1 ? 'disabled' : '' %>">
+                  <a class="page-link" href="?page=<%= currentPage - 1 %>&search=<%= searchQuery %>&department=<%= departmentFilter %>&jobTitle=<%= jobTitleFilter %>">Previous</a>
+                </li>
+                
+                <% for (let i = 1; i <= totalPages; i++) { %>
+                  <li class="page-item <%= currentPage === i ? 'active' : '' %>">
+                    <a class="page-link" href="?page=<%= i %>&search=<%= searchQuery %>&department=<%= departmentFilter %>&jobTitle=<%= jobTitleFilter %>"><%= i %></a>
+                  </li>
+                <% } %>
+                
+                <li class="page-item <%= currentPage === totalPages ? 'disabled' : '' %>">
+                  <a class="page-link" href="?page=<%= currentPage + 1 %>&search=<%= searchQuery %>&department=<%= departmentFilter %>&jobTitle=<%= jobTitleFilter %>">Next</a>
+                </li>
+              </ul>
+            </nav>
+          <% } %>
+        <% } else { %>
+          <div class="text-center py-5">
+            <i class="bi bi-person-x text-muted" style="font-size: 4rem;"></i>
+            <p class="text-muted mt-3">No employees found</p>
+            <a href="/employees/add" class="btn btn-primary">Add First Employee</a>
+          </div>
+        <% } %>
+      </div>
+    </div>
+  </div>
+  
+  <%- include('../partials/footer') %>
+  
+  <!-- Bootstrap JS -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="/js/main.js"></script>
+</body>
+</html>
